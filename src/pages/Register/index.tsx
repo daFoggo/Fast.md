@@ -29,7 +29,7 @@ import { toast } from "sonner";
 
 const formSchema = z
   .object({
-    name: z.string().nonempty("Username is required"),
+    username: z.string().nonempty("Username is required"),
     password: z
       .string()
       .min(6, "Password must be at least 6 characters")
@@ -48,7 +48,7 @@ const Register = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      username: "",
       password: "",
       confirmPassword: "",
     },
@@ -57,11 +57,13 @@ const Register = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const success = await register(values.name, values.password);
+      const success = await register(values.username, values.password);
 
       if (success) {
         toast.success("Registered successfully");
         navigate(routes.login);
+      } else {
+        toast.error("Registered failed");
       }
     } catch (error) {
       toast.error("Registered failed");
@@ -88,7 +90,7 @@ const Register = () => {
             >
               <FormField
                 control={form.control}
-                name="name"
+                name="username"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>User name</FormLabel>

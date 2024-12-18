@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/auth-context";
 const Navbar = () => {
   const auth = useAuth();
   const user = auth?.user;
+  const logout = auth?.logout;
   const location = useLocation();
 
   return (
@@ -17,7 +18,7 @@ const Navbar = () => {
         <div className="flex items-center space-x-2">
           <ThemeToggle />
           {user ? (
-            <UserMenu user={user} />
+            <UserMenu user={user} logout={logout || (() => {})} />
           ) : location.pathname !== routes.register ? (
             <Link to={routes.register}>
               <Button>Register</Button>

@@ -28,8 +28,8 @@ import { Loader2, LogIn } from "lucide-react";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  name: z.string().nonempty(),
-  password: z.string().nonempty(),
+  username: z.string().nonempty("Username is required"),
+  password: z.string().nonempty("Password is required"),
 });
 
 const Login = () => {
@@ -39,7 +39,7 @@ const Login = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      username: "",
       password: "",
     },
   });
@@ -47,11 +47,13 @@ const Login = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const success = await login(values.name, values.password);
+      const success = await login(values.username, values.password);
 
       if (success) {
         toast.success("Logged in successfully");
         navigate(routes.home);
+      } else {
+        toast.error("Logged in failed");
       }
     } catch (error) {
       toast.error("Logged in failed");
@@ -78,7 +80,7 @@ const Login = () => {
             >
               <FormField
                 control={form.control}
-                name="name"
+                name="username"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>User name</FormLabel>

@@ -43,20 +43,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (name: string, password: string) => {
+  const login = async (username: string, password: string) => {
     try {
       const response = await axios.post(LOGIN_IP, {
-        name,
+        username,
         password,
       });
 
-      if (response.data.success) {
-        const { accessToken, user } = response.data.payload;
+      if (response.status === 200 || response.status === 201) {
+        const { token, user } = response.data;
 
-        localStorage.setItem("token", accessToken);
+        localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
-        setToken(accessToken);
+        setToken(token);
         setUser(user);
         setIsAuthenticated(true);
 
@@ -69,14 +69,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (name: string, password: string) => {
+  const register = async (username: string, password: string) => {
     try {
       const response = await axios.post(REGISTER_IP, {
-        name,
+        username,
         password,
       });
 
-      if (response.data.success) {
+      if (response.status === 200 || response.status === 201) {
         return true;
       }
       return false;

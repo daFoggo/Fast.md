@@ -15,22 +15,21 @@ import RootLayout from "@/layouts/RootLayout";
 
 const ProtectedRoute = () => {
   const navigate = useNavigate();
-  const { isAuthenticated = false, user } = useAuth() as IAuthContextType;
-  // useEffect(() => {
-  //   const storedToken = localStorage.getItem("token");
-  //   const storedUser = localStorage.getItem("user");
+  const { isAuthenticated = false } = useAuth() as IAuthContextType;
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
 
-  //   if (storedToken && storedUser && !isAuthenticated) {
-  //     return;
-  //   }
+    if (storedToken && storedUser && !isAuthenticated) {
+      return;
+    }
 
-  //   if (!storedToken || !storedUser) {
-  //     navigate(routes.login, { replace: true });
-  //   }
-  // }, [isAuthenticated, navigate]);
+    if (!storedToken || !storedUser) {
+      navigate(routes.login, { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
-  // return isAuthenticated ? <Outlet /> : null;
-  return <Outlet />;
+  return isAuthenticated ? <Outlet /> : null;
 };
 
 const router = createBrowserRouter([

@@ -9,18 +9,19 @@ import { Avatar, AvatarFallback, } from "../ui/avatar";
 
 const UserMenu = ({
   user = {
-    name: "U",
-    role: "User",
+    username: "U",
   },
+  logout = () => console.log("Logout"),
 }: {
   user: IUser;
+  logout: () => void;
 }) => {
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar>
-            <AvatarFallback>{user.name?.[0].toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{user.username?.[0].toUpperCase()}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -30,8 +31,8 @@ const UserMenu = ({
           <DropdownMenuItem onSelect={() => console.log("Settings")}>
             Settings
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => console.log("Logout")}>
-            Logout
+          <DropdownMenuItem onSelect={logout} >
+            Log out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

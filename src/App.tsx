@@ -7,7 +7,7 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <RouterProvider router={router} /> {/* RouterProvider at the top level */}
+        <RouterProvider router={router} /> 
       </ThemeProvider>
     </AuthProvider>
   );

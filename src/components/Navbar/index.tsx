@@ -14,20 +14,20 @@ const Navbar = () => {
     <header className="sticky top-0 z-10 bg-background border-b">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <h1 className="text-lg font-bold">fast.md</h1>
-        {user ? (
-          <div className="flex items-center space-x-2">
-            <ThemeToggle />
+        <div className="flex items-center space-x-2">
+          <ThemeToggle />
+          {user ? (
             <UserMenu user={user} />
-          </div>
-        ) : location.pathname !== routes.register ? (
-          <Link to={routes.register}>
-            <Button>Register</Button>
-          </Link>
-        ) : (
-          <Link to={routes.login}>
-            <Button>Login</Button>
-          </Link>
-        )}
+          ) : location.pathname !== routes.register ? (
+            <Link to={routes.register}>
+              <Button>Register</Button>
+            </Link>
+          ) : (
+            <Link to={routes.login}>
+              <Button>Login</Button>
+            </Link>
+          )}
+        </div>
       </div>
     </header>
   );

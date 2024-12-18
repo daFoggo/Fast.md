@@ -1,13 +1,12 @@
 export interface IAuthContextType {
-    user: User | null;
-    token: string | null;
-    login: (cccd_id: string, password: string) => Promise<boolean>;
-    logout: () => void;
-    isAuthenticated: boolean;
-  }
-  
-  export interface IUser {
-    name: string;
-    role: string;
-  }
-  
+  user: User | null;
+  token: string | null;
+  login: (name: string, password: string) => Promise<boolean>;
+  register: (name: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  isAuthenticated: boolean;
+}
+
+export interface IUser {
+  name: string;
+}

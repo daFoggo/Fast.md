@@ -1,9 +1,15 @@
-import axios from "axios";
-import { ReactNode, useEffect } from "react";
-import { createContext, useContext, useState } from "react";
+import { routes } from "@/router/routes";
 import { IAuthContextType, IUser } from "@/types/auth-context";
+import { LOGIN_IP, REGISTER_IP } from "@/utils/ip";
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { LOGIN_IP } from "@/utils/ip";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 const AuthContext = createContext<IAuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -37,10 +43,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (cccd_id: string, password: string) => {
+  const login = async (name: string, password: string) => {
     try {
       const response = await axios.post(LOGIN_IP, {
-        cccd_id,
+        name,
         password,
       });
 
@@ -63,6 +69,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const register = async (name: string, password: string) => {
+    try {
+      const response = await axios.post(REGISTER_IP, {
+        name,
+        password,
+      });
+
+      if (response.data.success) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Register failed", error);
+      return false;
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -78,6 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         token,
         login,
+        register,
         logout,
         isAuthenticated,
       }}

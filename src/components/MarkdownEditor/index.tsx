@@ -3,25 +3,32 @@
 import { Toolbar } from "@/components/Toolbar";
 import { Textarea } from "@/components/ui/textarea";
 import { IMarkdownEditorProps } from "@/types/markdown-editor";
+import { MARKDOWN_IP } from "@/utils/ip";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { useNavigate } from "react-router-dom";
 import { usePDF } from "react-to-pdf";
+import { toast } from "sonner";
 import EditorMenu from "../EditorMenu";
+import { Input } from "../ui/input";
 import { TooltipProvider } from "../ui/tooltip";
+import { routes } from "@/router/routes";
 
 const MarkdownEditor = ({ fileData }: IMarkdownEditorProps) => {
-  const [markdown, setMarkdown] = useState(fileData?.content || ""); 
+  const navigate = useNavigate();
+  const [markdown, setMarkdown] = useState(fileData?.content || "");
   const [view, setView] = useState<"edit" | "preview">("edit");
-  const [fileName, setFileName] = useState(fileData?.title || "fastmarkdown"); 
+  const [title, setTitle] = useState(fileData?.title || "");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { toPDF, targetRef } = usePDF({ filename: `${fileName}.pdf` });
+  const { toPDF, targetRef } = usePDF({ filename: `${title}.pdf` });
 
   useEffect(() => {
     if (fileData) {
       setMarkdown(fileData.content);
-      setFileName(fileData.title);
+      setTitle(fileData.title);
     }
-  }, [fileData]); 
+  }, [fileData]);
 
   const handleInsert = (format: string) => {
     if (textareaRef.current) {
@@ -62,21 +69,67 @@ const MarkdownEditor = ({ fileData }: IMarkdownEditorProps) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${fileName}.md`;
+    link.download = `${title}.md`;
     link.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleSaveFile = async () => {
+    try {
+      const resonse = await axios.put(`${MARKDOWN_IP}/${fileData.id}`, {
+        title: title,
+        content: markdown,
+        tags: fileData.tags,
+      });
+
+      if (resonse.status === 200) {
+        toast.success("File saved successfully");
+      } else {
+        toast.error("Failed to save file");
+      }
+    } catch (error) {
+      toast.error("Failed to save file");
+      console.error(error);
+    }
+  };
+
+  const handleDeleteFile = async () => {
+    try {
+      const resonse = await axios.delete(`${MARKDOWN_IP}/${fileData.id}`);
+
+      if (resonse.status === 200 || resonse.status === 204) {
+        toast.success("File deleted successfully");
+        navigate(routes.fileList);
+      } else {
+        toast.error("Failed to delete file");
+      }
+    } catch (error) {
+      toast.error("Failed to delete file");
+      console.error(error);
+    }
   };
 
   return (
     <TooltipProvider>
       <div className="flex flex-col h-[calc(100vh-4rem)]">
-        <div className="flex justify-between items-center p-2 bg-muted shadow-sm border">
+        <div className="flex justify-between items-center p-2 bg-muted shadow-sm">
           <Toolbar onInsert={handleInsert} />
           <EditorMenu
             view={view}
             setView={setView}
             handleExportPDF={handleExportPDF}
             handleExportMarkdown={handleExportMarkdown}
+            handleSaveFile={handleSaveFile}
+            handleDeleteFile={handleDeleteFile}
+          />
+        </div>
+        <div className="px-4 py-2 bg-muted shadow-sm flex items-center">
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full border-none text-lg font-semibold focus:ring-0 focus:ring-offset-0  text-center shadow-none
+            "
+            placeholder="Untitled Document"
           />
         </div>
         <div className="flex-grow overflow-hidden">

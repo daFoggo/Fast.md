@@ -5,6 +5,7 @@ export interface IFile {
     title: string;
     content: string;
     user: IUser;
+    tags: string[];
     createdAt: Date;
     updatedAt: Date;
 }

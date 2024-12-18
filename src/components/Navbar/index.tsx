@@ -2,9 +2,11 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import UserMenu from "@/components/UserMenu";
 
-import { routes } from "@/router/routes";
-import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/auth-context";
+import { routes } from "@/router/routes";
+import { FaMarkdown } from "react-icons/fa";
+
+import { Link, useLocation } from "react-router-dom";
 const Navbar = () => {
   const auth = useAuth();
   const user = auth?.user;
@@ -14,8 +16,12 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="p-4 flex items-center justify-between">
-        <Link to={routes.fileList}>
-          <h1 className="text-lg font-bold">fast.md</h1>
+        <Link
+          to={routes.fileList}
+          className="flex items-center gap-2 justify-center"
+        >
+          <FaMarkdown className="size-6" />
+          <h1 className="text-xl font-bold">fast.md</h1>
         </Link>
         <div className="flex items-center space-x-2">
           <ThemeToggle />

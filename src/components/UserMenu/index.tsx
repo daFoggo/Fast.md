@@ -5,11 +5,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { IUser } from "@/types/auth-context";
-import { Avatar, AvatarFallback, } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
 const UserMenu = ({
   user = {
-    username: "U",
+    username: "Username",
+    password: "",
+    avatar: "",
   },
   logout = () => console.log("Logout"),
 }: {
@@ -31,9 +33,7 @@ const UserMenu = ({
           <DropdownMenuItem onSelect={() => console.log("Settings")}>
             Settings
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={logout} >
-            Log out
-          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={logout}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

@@ -51,7 +51,7 @@ const Login = () => {
 
       if (success) {
         toast.success("Logged in successfully");
-        navigate(routes.home);
+        navigate(routes.fileList);
       } else {
         toast.error("Logged in failed");
       }

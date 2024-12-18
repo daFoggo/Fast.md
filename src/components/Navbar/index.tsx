@@ -14,7 +14,9 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="p-4 flex items-center justify-between">
-        <h1 className="text-lg font-bold">fast.md</h1>
+        <Link to={routes.fileList}>
+          <h1 className="text-lg font-bold">fast.md</h1>
+        </Link>
         <div className="flex items-center space-x-2">
           <ThemeToggle />
           {user ? (

@@ -17,7 +17,7 @@ import { tools } from "./constant";
 export function Toolbar({ onInsert }: IToolbarProps) {
   return (
     <TooltipProvider>
-      <div className="flex gap-1">
+      <div className="grid grid-cols-4 grid-rows-2 gap-1">
         {tools.map((tool, index) => (
           <div key={index}>
             <Tooltip delayDuration={100}>
@@ -67,4 +67,3 @@ export function Toolbar({ onInsert }: IToolbarProps) {
     </TooltipProvider>
   );
 }
-

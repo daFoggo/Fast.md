@@ -1,5 +1,7 @@
 import { useAuth } from "@/contexts/auth-context";
-import Home from "@/pages/Home";
+import RootLayout from "@/layouts/RootLayout";
+import FileEdit from "@/pages/FileEdit";
+import FileList from "@/pages/FileList";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import { IAuthContextType } from "@/types/auth-context";
@@ -11,11 +13,11 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { routes } from "./routes";
-import RootLayout from "@/layouts/RootLayout";
 
 const ProtectedRoute = () => {
   const navigate = useNavigate();
   const { isAuthenticated = false } = useAuth() as IAuthContextType;
+
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
@@ -41,8 +43,16 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
-            path: routes.home,
-            element: <Home />,
+            path: "/",
+            element: <Navigate to={routes.fileList} replace />,
+          },
+          {
+            path: "/file-list",
+            element: <FileList />,
+          },
+          {
+            path: routes.dynamicFile,
+            element: <FileEdit/>,
           },
         ],
       },

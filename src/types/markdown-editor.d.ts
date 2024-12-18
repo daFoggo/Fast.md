@@ -1,4 +1,5 @@
+import { IFile } from "./file-list";
 
 export interface IMarkdownEditorProps {
-    fileId: string
-  }
+  fileData: IFile;
+}

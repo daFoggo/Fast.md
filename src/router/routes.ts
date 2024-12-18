@@ -1,5 +1,6 @@
 export const routes = {
   login: "/login",
   register: "/register",
-  home: "/",
+  fileList: "/file-list",
+  dynamicFile: "/edit/:fileId",
 };

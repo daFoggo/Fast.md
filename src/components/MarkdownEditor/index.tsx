@@ -1,49 +1,27 @@
 "use client";
 
 import { Toolbar } from "@/components/Toolbar";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { routes } from "@/router/routes";
 import { IMarkdownEditorProps } from "@/types/markdown-editor";
-import { Download, Edit2, Eye } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { useNavigate } from "react-router-dom";
 import { usePDF } from "react-to-pdf";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import EditorMenu from "../EditorMenu";
+import { TooltipProvider } from "../ui/tooltip";
 
-const MarkdownEditor = ({ fileId }: IMarkdownEditorProps) => {
-  const [markdown, setMarkdown] = useState("");
+const MarkdownEditor = ({ fileData }: IMarkdownEditorProps) => {
+  const [markdown, setMarkdown] = useState(fileData?.content || ""); 
   const [view, setView] = useState<"edit" | "preview">("edit");
-  const [, setSelectedText] = useState("");
-  const [fileName, setFileName] = useState("fastmarkdown");
+  const [fileName, setFileName] = useState(fileData?.title || "fastmarkdown"); 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const navigate = useNavigate();
   const { toPDF, targetRef } = usePDF({ filename: `${fileName}.pdf` });
 
   useEffect(() => {
-    const files = JSON.parse(localStorage.getItem("markdownFiles") || "[]");
-    const currentFile = files.find((file: any) => file.id === fileId);
-    if (currentFile) {
-      setMarkdown(currentFile.content);
-      setFileName(currentFile.name);
-    } else {
-      navigate(routes.home);
+    if (fileData) {
+      setMarkdown(fileData.content);
+      setFileName(fileData.title);
     }
-  }, [fileId, navigate]);
+  }, [fileData]); 
 
   const handleInsert = (format: string) => {
     if (textareaRef.current) {
@@ -72,14 +50,6 @@ const MarkdownEditor = ({ fileId }: IMarkdownEditorProps) => {
     }
   };
 
-  const handleSave = () => {
-    const files = JSON.parse(localStorage.getItem("markdownFiles") || "[]");
-    const updatedFiles = files.map((file: any) =>
-      file.id === fileId ? { ...file, content: markdown } : file
-    );
-    localStorage.setItem("markdownFiles", JSON.stringify(updatedFiles));
-  };
-
   const handleExportPDF = () => {
     setView("preview");
     setTimeout(() => {
@@ -97,55 +67,17 @@ const MarkdownEditor = ({ fileId }: IMarkdownEditorProps) => {
     URL.revokeObjectURL(url);
   };
 
-  const handleSelectionChange = () => {
-    if (textareaRef.current) {
-      const start = textareaRef.current.selectionStart;
-      const end = textareaRef.current.selectionEnd;
-      setSelectedText(markdown.substring(start, end));
-    }
-  };
-
   return (
     <TooltipProvider>
       <div className="flex flex-col h-[calc(100vh-4rem)]">
         <div className="flex justify-between items-center p-2 bg-muted shadow-sm border">
           <Toolbar onInsert={handleInsert} />
-          <div className="flex gap-2">
-            <Tooltip delayDuration={100}>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  onClick={() => setView(view === "edit" ? "preview" : "edit")}
-                >
-                  {view === "edit" ? <Eye size={18} /> : <Edit2 size={18} />}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {view === "edit" ? "Preview" : "Edit"}
-              </TooltipContent>
-            </Tooltip>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button size="icon">
-                  <Download size={18} />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="w-[95%] sm:w-[425px] rounded-md">
-                <DialogHeader className="items-center">
-                  <DialogTitle>Export Options</DialogTitle>
-                  <DialogDescription>
-                    Choose the format to export your document.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="flex justify-end space-x-2 pt-4">
-                  <Button onClick={handleExportPDF}>Export as PDF</Button>
-                  <Button onClick={handleExportMarkdown}>
-                    Export as Markdown
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
+          <EditorMenu
+            view={view}
+            setView={setView}
+            handleExportPDF={handleExportPDF}
+            handleExportMarkdown={handleExportMarkdown}
+          />
         </div>
         <div className="flex-grow overflow-hidden">
           {view === "edit" ? (
@@ -155,9 +87,7 @@ const MarkdownEditor = ({ fileId }: IMarkdownEditorProps) => {
               value={markdown}
               onChange={(e) => {
                 setMarkdown(e.target.value);
-                handleSave();
               }}
-              onSelect={handleSelectionChange}
               placeholder="Write down your ideas..."
             />
           ) : (

@@ -11,8 +11,8 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-10 bg-background border-b">
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="p-4 flex items-center justify-between">
         <h1 className="text-lg font-bold">fast.md</h1>
         <div className="flex items-center space-x-2">
           <ThemeToggle />

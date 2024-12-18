@@ -1,6 +1,10 @@
+import MarkdownEditor from "@/components/MarkdownEditor";
+
 const Home = () => {
 
-  return <div>Home</div>;
+  return <div>
+    <MarkdownEditor fileId="." />
+  </div>;
 
 };
 

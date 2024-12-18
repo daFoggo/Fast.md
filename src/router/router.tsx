@@ -16,20 +16,21 @@ import RootLayout from "@/layouts/RootLayout";
 const ProtectedRoute = () => {
   const navigate = useNavigate();
   const { isAuthenticated = false, user } = useAuth() as IAuthContextType;
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
+  // useEffect(() => {
+  //   const storedToken = localStorage.getItem("token");
+  //   const storedUser = localStorage.getItem("user");
 
-    if (storedToken && storedUser && !isAuthenticated) {
-      return;
-    }
+  //   if (storedToken && storedUser && !isAuthenticated) {
+  //     return;
+  //   }
 
-    if (!storedToken || !storedUser) {
-      navigate(routes.login, { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
+  //   if (!storedToken || !storedUser) {
+  //     navigate(routes.login, { replace: true });
+  //   }
+  // }, [isAuthenticated, navigate]);
 
-  return isAuthenticated && user?.role === "admin" ? <Outlet /> : null;
+  // return isAuthenticated ? <Outlet /> : null;
+  return <Outlet />;
 };
 
 const router = createBrowserRouter([

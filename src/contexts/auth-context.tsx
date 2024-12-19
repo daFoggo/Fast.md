@@ -1,4 +1,3 @@
-import { routes } from "@/router/routes";
 import { IAuthContextType, IUser } from "@/types/auth-context";
 import { LOGIN_IP, REGISTER_IP } from "@/utils/ip";
 import axios from "axios";
